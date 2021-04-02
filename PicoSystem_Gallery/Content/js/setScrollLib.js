@@ -10,14 +10,14 @@ function setScrollItem(itm, timelen) {
     function ssi(items, timelen) {
         var p = items.querySelector('.sld-item');
         if (p != null) {
+            var p = items.querySelector('.sld-item');
             var autorun = items.getAttribute("data-animation");
             var style2 = p.currentStyle || window.getComputedStyle(p);
-            
+            items.marginlen = parseInt(style2.marginRight) + parseInt(style2.marginLeft);
+            items.elmlen = parseInt(p.offsetWidth) + items.marginlen;
+            items.alllen = parseInt(items.lastElementChild.firstElementChild.offsetWidth);
+            items.sldlen = parseInt(items.offsetWidth);
             function runInterval() {
-                items.marginlen = parseInt(style2.marginRight) + parseInt(style2.marginLeft);
-                items.elmlen = parseInt(p.offsetWidth) + items.marginlen;
-                items.alllen = parseInt(items.lastElementChild.firstElementChild.offsetWidth);
-                items.sldlen = parseInt(items.offsetWidth);
                 if (Number.isNaN(items.sldpoint)) {
                     items.sldpoint = 0;
                 }
@@ -37,20 +37,14 @@ function setScrollItem(itm, timelen) {
             if (autorun == "true") {
                 id = setInterval(runInterval, timelen);
             }
-            
-            items.querySelector('.sld-arrow-right').addEventListener('click', function (e) {
-                items.marginlen = parseInt(style2.marginRight) + parseInt(style2.marginLeft);
-                items.elmlen = parseInt(p.offsetWidth) + items.marginlen;
-                items.alllen = parseInt(items.lastElementChild.firstElementChild.offsetWidth);
-                items.sldlen = parseInt(items.offsetWidth);
-                items.sldpoint = Math.abs(parseInt(items.lastElementChild.firstElementChild.style.right));
-                e.preventDefault(); e.stopPropagation();
+
+            items.sldpoint = Math.abs(parseInt(items.lastElementChild.firstElementChild.style.right)) || 0;
+            items.querySelector('.sld-arrow-right').addEventListener('click', function () {
                 if (items.sldpoint == 0) {
                     items.sldpoint = (items.alllen - items.sldlen) + items.marginlen;
                 } else {
                     if (items.sldpoint > items.elmlen) {
                         items.sldpoint = items.sldpoint - items.elmlen;
-                        
                     }
                     else {
                         items.sldpoint = 0;
@@ -58,13 +52,7 @@ function setScrollItem(itm, timelen) {
                 }
                 items.lastElementChild.firstElementChild.style.right = -items.sldpoint + 'px';
             });
-            items.querySelector('.sld-arrow-left').addEventListener('click', function (e) {
-                e.preventDefault(); e.stopPropagation();
-                items.marginlen = parseInt(style2.marginRight) + parseInt(style2.marginLeft);
-                items.elmlen = parseInt(p.offsetWidth) + items.marginlen;
-                items.alllen = parseInt(items.lastElementChild.firstElementChild.offsetWidth);
-                items.sldlen = parseInt(items.offsetWidth);
-                items.sldpoint = Math.abs(parseInt(items.lastElementChild.firstElementChild.style.right)) || 0;
+            items.querySelector('.sld-arrow-left').addEventListener('click', function () {
                 if (Number.isNaN(items.sldpoint)) {
                     items.sldpoint = 0;
                 }
@@ -109,6 +97,7 @@ function setScrollGl(itm) {
     function ssgl(items) {
         var p = items.querySelector('.sld-item');
         if (p != null) {
+            var p = items.querySelector('.sld-item');
             var style2 = p.currentStyle || window.getComputedStyle(p);
             items.marginlen = parseInt(style2.marginRight) + parseInt(style2.marginLeft);
             items.elmlen = parseInt(p.offsetWidth) + items.marginlen;

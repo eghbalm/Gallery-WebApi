@@ -1,14 +1,9 @@
 ﻿
 @{
-    ViewBag.Title = "AllPhotos";
+    ViewBag.Title = "SlideShow";
+
 }
-
-<div class="smalItems">
-    <p>Click On Photos To Slide Show</p>
-    <div id="result"></div>
-</div>
-
-<div class="modal animated zoomIn fade" id="gl-galery" role="dialog">
+<div id="gl-galery">
     <div class="gl-container">
         <div class="gl-body">
             <div class="gl-toolbar">
@@ -18,7 +13,7 @@
             </div>
             <div class="gl-main">
                 <div class="gl-right-arrow gl-icon"></div>
-                <div class="gl-main-img"><img id="gl-main-img" src="~/imgs/0.jpg" /></div>
+                <div class="gl-main-img"><img id="gl-main-img" src="~/imgss/0.jpg" /></div>
                 <div class="gl-left-arrow gl-icon"></div>
             </div>
 
@@ -38,6 +33,7 @@
 @section Script
 {
     <script>
+        var userid=@ViewBag.IdUser;
         function SetActiveSlider() {
             ////==================================================================gl-galery
             $('#gl-counter-all').html($('.gl-thumb-item').length);
@@ -146,10 +142,12 @@
 
             });
             function setScrollItem(ind) {
-                var wdshow = $(document).width();
+                var wdshow = $('.gl-thumb').width();
                 var wdelm = document.getElementsByClassName('gl-thumb-item').item(0).offsetWidth + parseInt($('.gl-thumb-item').css('margin-right'));
                 var itemLen = glcounterall + 1;
                 var wdall = wdelm * itemLen;
+
+                if (wdall>wdshow) {
                 var numshow = parseInt(wdshow / wdelm);
                 var intresult = ind * wdelm;
                 var halfnum = parseInt((wdshow / 2) / wdelm);
@@ -162,22 +160,14 @@
                     intresult = wdall - wdshow;
                 }
                 $('.gl-thumb #gl-group').css('transform', 'translate3d(' + -intresult + 'px, 0px, 0px)');
+                }
             };
             ////======================================================================img-viewer
-            //$('#ic-Close').click(function () {
-            //    var elm = this.parentElement;
-            //    elm.style.display = 'none';
-            //});
+            $('.gl-close').click(function () {
+                window.history.back();
+            });
         };
-        var url = serverUrl + '/api/tbl_Photo/';
-        //var DataRecive;
-        function renderBase(item) {
-            var sss = '';
-            for (var i = 0; i < item.length; i++) {
-                sss = sss + '<div data-toggle="modal" data-target="#gl-galery"><img title="' + item[i].Description + '" src="' + serverUrl + item[i].PhotoPath + '"/></div>';
-            }
-            return sss;
-        };
+        var url = serverUrl + '/api/tbl_Photo';
         function renderPhoto(item) {
             var sss = '<div class="gl-thumb-item gl-thumb-Active"><img src="' + serverUrl + item[0].PhotoPath + '" /></div>';
             for (var i = 1; i < item.length; i++) {
@@ -188,13 +178,12 @@
         };
         function renderData(item) {
             if (item != null) {
-                $('#result').html(renderBase(item));
                 $('#gl-main-img').attr('src', serverUrl + item[0].PhotoPath);
                 $('#gl-group').html(renderPhoto(item));
             }
         }
         function GetPhotos() {
-            $.getJSON(url).done(function (data) {
+            $.getJSON(url +'/'+ userid).done(function (data) {
                 renderData(data);
                 SetActiveSlider();
             }).fail(function (jgXHR, textstatus, err) {

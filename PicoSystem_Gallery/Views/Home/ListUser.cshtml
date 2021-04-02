@@ -19,7 +19,7 @@
         function formatItem(item) {
             var sss = '<tr><td>Code</td><td>Name</td><td>Family</td><td>SelPhone</td><td>DateSave</td><td><a onclick="NewUser();">CreateNew</a></td></tr>';
             for (var i = 0; i < item.length; i++) {
-                sss = sss + '<tr><td>' + item[i].Id + '</td><td>' + item[i].Name + '</td><td>' + item[i].Family + '</td><td>' + item[i].SelPhone + '</td><td>' + item[i].tarikhSabt + '</td><td>&emsp;<button onclick="EditUser(' + item[i].Id + ');">edit</button>&emsp;&emsp;<button  onclick="DeleteUser(' + item[i].Id + ');">Delete</button>&emsp;<a  href="../home/UploadPhoto/' + item[i].Id + '">ListPhoto</a>&emsp;</td></tr>';
+                sss = sss + '<tr><td>' + item[i].Id + '</td><td>' + item[i].Name + '</td><td>' + item[i].Family + '</td><td>' + item[i].SelPhone + '</td><td>' + item[i].tarikhSabt + '</td><td>&emsp;<button onclick="EditUser(' + item[i].Id + ');">edit</button>&emsp;&emsp;<button  onclick="DeleteUser(' + item[i].Id + ');">Delete</button>&emsp;<a  href="../UploadPhoto/' + item[i].Id + '">ListPhoto</a>&emsp;</td></tr>';
             }
             return sss;
         };

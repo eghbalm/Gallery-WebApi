@@ -141,27 +141,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="img\0.jpg" />
-    <Content Include="img\1.jpg" />
-    <Content Include="img\10.jpg" />
-    <Content Include="img\11.jpg" />
-    <Content Include="img\12.jpg" />
-    <Content Include="img\13.jpg" />
-    <Content Include="img\14.jpg" />
-    <Content Include="img\15.jpg" />
-    <Content Include="img\16.jpg" />
-    <Content Include="img\17.jpg" />
-    <Content Include="img\18.jpg" />
-    <Content Include="img\19.jpg" />
-    <Content Include="img\2.jpg" />
-    <Content Include="img\20.jpg" />
-    <Content Include="img\3.jpg" />
-    <Content Include="img\4.jpg" />
-    <Content Include="img\5.jpg" />
-    <Content Include="img\6.jpg" />
-    <Content Include="img\7.jpg" />
-    <Content Include="img\8.jpg" />
-    <Content Include="img\9.jpg" />
+    <Content Include="img\Del.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\Fonts\lg.eot" />
@@ -212,6 +192,7 @@
     <Content Include="Views\Home\UploadPhoto.cshtml" />
     <Content Include="Views\Home\ListUser.cshtml" />
     <Content Include="Views\Home\AllPhotos.cshtml" />
+    <Content Include="Views\Home\SlideShow.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
