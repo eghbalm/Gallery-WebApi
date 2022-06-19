@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div style="margin-top:80px;">
+    <div id="result" width="900"></div>
+</div>
+
+
+
+@section Script
+{
+    <script>        
+        var url = serverUrl + '/api/tbl_Photo/';
+        var DataRecive;
+        function RenderDate(item) {
+            var Str1 = '';
+            for (var i = 1; i < item.length; i++) {
+                Str1 = Str1 + '<div class="sld-item"><div class="sld-item-body"><div><img title="' + item[i].Description + '" src="' + serverUrl + item[i].PhotoPath + '"/></div><div><h4>' + item[i].Description + '</h4></div></div></div>';
+            }
+            return Str1;
+        };
+
+
+        function testloop() {
+            if (DataRecive != null) {
+                // Sort Objects Numerically
+                //console.log(DataRecive);
+                //DataRecive.sort((a, b) => (a.topSpeed - b.topSpeed));
+                //console.log(DataRecive.sort((a, b) => (a.Id - b.Id)));
+                // Sort Objects Alphabetically
+                //var srt2= DataRecive.sort((a, b) => (a.brand > b.brand) ? 1 : -1);
+                //console.log(srt2);
+                var data = new Array();//= DataRecive;
+                function getIndex(dt, vl) {
+                    var idx = -1;
+                    for (var j = 0; j < dt.length; j++) {
+                        if (dt[j][0] == vl) {
+                            idx = j;
+                            break;
+                        }
+                    }
+                    return idx;
+                }
+                for (var i = 0; i < DataRecive.length; i++) {
+                    if (data.length > 0) {
+
+                        var index = getIndex(data, DataRecive[i].UserId);
+                        if (index != -1) {
+                            data[index].push(DataRecive[i]);
+                        } else {
+                            data.push([DataRecive[i].UserId, DataRecive[i]]);
+                        }
+
+                    } else {
+                        data.push([DataRecive[i].UserId, DataRecive[i]]);
+                    }
+
+                }
+                var outData = '';
+                for (var i = 0; i < data.length; i++) {
+                    outData = outData + '<table class="tblSlider"><tr><td>Uploaded By ' + data[i][1].UserName + '</td></tr><tr><td><div style="cursor:pointer;" class="sldItems" data-animation="true"><div class="sld-arrow-right"><div class="fa fa-arrow-right"></div></div><div class="sld-arrow-left"><div class="fa fa-arrow-left"></div></div><div class="sldbase"><div class="sld-container" id="itemSlideShow" onclick="GoSlide(' + data[i][1].UserId + ')">';;
+                    outData = outData + RenderDate(data[i]);                  
+                    outData = outData + '</div></div></div></td></tr></table>';
+                }
+                $('#result').html(outData);               
+            }
+        }
+
+        function GoSlide(id) {
+            window.location.href = serverUrl + '/SlideShow/' + id;
+        }
+        function GetPhotos() {
+            $.getJSON(url).done(function (data) {
+                DataRecive = data;
+                //$('#itemSlideShow').html(RenderDate(data));
+                testloop();
+                setScrollItem(document.querySelectorAll('.sldItems'), 4000);
+            }).fail(function (jgXHR, textstatus, err) {
+                alert('Error : ' + err);
+            });
+        };
+        $(document).ready(function () {
+            GetPhotos();
+        });
+    </script>
+}

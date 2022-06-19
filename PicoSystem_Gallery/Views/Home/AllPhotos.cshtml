@@ -1,0 +1,205 @@
+﻿
+@{
+    ViewBag.Title = "AllPhotos";
+}
+
+<div class="smalItems">
+    <p>Click On Photos To Slide Show</p>
+    <div id="result"></div>
+</div>
+
+<div class="modal animated zoomIn fade" id="gl-galery" role="dialog">
+    <div class="gl-container">
+        <div class="gl-body">
+            <div class="gl-toolbar">
+                <span class="gl-icon gl-close" data-dismiss="modal"></span>
+                <a id="gl-download" target="_blank" download="" class="gl-download gl-icon" href="#"></a>
+                <div id="gl-counter"><span id="gl-counter-current">1</span> / <span id="gl-counter-all">20</span></div>
+            </div>
+            <div class="gl-main">
+                <div class="gl-right-arrow gl-icon"></div>
+                <div class="gl-main-img"><img id="gl-main-img" src="~/imgs/0.jpg" /></div>
+                <div class="gl-left-arrow gl-icon"></div>
+            </div>
+
+            <div class="gl-thumb">
+                <div class="group" id="gl-group">
+                    @*<div class="gl-thumb-item gl-thumb-Active"><img src="~/img/0.jpg" /></div>
+                        <div class="gl-thumb-item"><img src="~/img/1.jpg" /></div>
+                        <div class="gl-thumb-item"><img src="~/img/2.jpg" /></div>*@
+
+                </div>
+                <span class="gl-thumb-menu gl-icon"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Script
+{
+    <script>
+      function SetActiveSlider() {
+            ////==================================================================gl-galery
+            $('#gl-counter-all').html($('.gl-thumb-item').length);
+
+            var glThumbItem = document.getElementById('gl-group').querySelector('.gl-thumb-item');
+            var timedelay = 1;
+            function delayCheck() {
+                if (timedelay == 5) {
+                    $('.gl-container .gl-toolbar').fadeOut();
+                    $('.gl-container .gl-left-arrow').fadeOut();
+                    $('.gl-container .gl-right-arrow').fadeOut();
+                    timedelay = 1;
+                }
+                timedelay = timedelay + 1;
+            };
+            var glcounterall = parseInt($('#gl-counter-all').html()) - 1;
+            var glcounterCount = parseInt($('#gl-counter-current').html()) - 1;
+            $(document).mousemove(function () {
+                $('.gl-container .gl-toolbar').fadeIn();
+                $('.gl-container .gl-left-arrow').fadeIn();
+                $('.gl-container .gl-right-arrow').fadeIn();
+                timedelay = 1;
+                clearInterval(_delay);
+                _delay = setInterval(delayCheck, 1000);
+            });
+            _delay = setInterval(delayCheck, 1000)
+            $('.gl-thumb-menu').click(function (e) {
+                $('.gl-thumb').toggleClass('gl-thumb-close');
+            });
+            $('.gl-right-arrow').click(function (e) {
+                goToNextSlide();
+            });
+            $('.gl-left-arrow').click(function (e) {
+                goToPrevSlide();
+            });
+            function showSlide(ind, next) {
+                var pathIMG = $('.gl-thumb-item:eq(' + ind + ')').find('img').attr('src');
+                setScrollItem(ind);
+                if (next != true) {
+                    $('.gl-main-img').css('left', 'unset');
+                    $('.gl-main-img').animate({ right: '1000', opacity: '0' }, 250, function () {
+                        $('#gl-main-img').attr('src', pathIMG);
+                        $('.gl-main-img').css('right', '-800px');
+                        $('.gl-main-img').animate({ right: '0', opacity: '1' }, 250);
+                    });
+
+                } else {
+                    $('.gl-main-img').css('right', 'unset');
+                    $('.gl-main-img').animate({ left: '1000', opacity: '0' }, 250, function () {
+                        $('#gl-main-img').attr('src', pathIMG);
+                        $('.gl-main-img').css('left', '-800px');
+                        $('.gl-main-img').animate({ left: '0', opacity: '1' }, 250);
+                    });
+                }
+                $('.gl-thumb-item').removeClass('gl-thumb-Active');
+                $('.gl-thumb-item:eq(' + ind + ')').addClass('gl-thumb-Active');
+                $('#gl-download').attr('href', pathIMG);
+                $('#gl-counter-current').html(ind + 1);
+            };
+            function goToPrevSlide() {
+                if (glcounterCount > 0) {
+                    glcounterCount--;
+                } else {
+                    glcounterCount = glcounterall;
+                }
+                showSlide(glcounterCount, true);
+            };
+            function goToNextSlide() {
+                if (glcounterCount < glcounterall) {
+                    glcounterCount++;
+                } else {
+                    glcounterCount = 0;
+                }
+                showSlide(glcounterCount, false);
+            };
+            $(document).keyup(function (e) {
+                var code = e.keyCode || e.which;
+                if (code == 37) {
+                    goToPrevSlide();
+                }
+                if (code == 39) {
+                    goToNextSlide();
+                }
+                if (code == 40) {
+                    $('.gl-thumb').addClass('gl-thumb-close');
+                }
+                if (code == 38) {
+                    $('.gl-thumb').removeClass('gl-thumb-close');
+                }
+            });
+            $('.gl-thumb-item').click(function (e) {
+
+                var oldind = $('.gl-thumb-Active').index();
+                var ind = $(this).index();
+                if (ind != oldind) {
+                    if (oldind < ind) {
+
+                        showSlide(ind, false);
+                    } else {
+                        showSlide(ind, true);
+                    }
+                    glcounterCount = ind;
+                }
+
+            });
+            function setScrollItem(ind) {
+                var wdshow = $('.gl-thumb').width();
+                var wdelm = document.getElementsByClassName('gl-thumb-item').item(0).offsetWidth + parseInt($('.gl-thumb-item').css('margin-right'));
+                var itemLen = glcounterall + 1;
+                var wdall = wdelm * itemLen;
+
+                if (wdall>wdshow) {
+                var numshow = parseInt(wdshow / wdelm);
+                var intresult = ind * wdelm;
+                var halfnum = parseInt((wdshow / 2) / wdelm);
+                if (ind > halfnum) {
+                    intresult = (ind - halfnum) * wdelm;
+                } else {
+                    intresult = 0;
+                }
+                if (wdall - intresult < wdshow) {
+                    intresult = wdall - wdshow;
+                }
+                $('.gl-thumb #gl-group').css('transform', 'translate3d(' + -intresult + 'px, 0px, 0px)');
+                }
+            };
+            
+        };
+        var url = serverUrl + '/api/tbl_Photo/';
+        //var DataRecive;
+        function renderBase(item) {
+            var Str1 = '';
+            for (var i = 0; i < item.length; i++) {
+                Str1 = Str1 + '<div data-toggle="modal" data-target="#gl-galery"><img title="' + item[i].Description + '" src="' + serverUrl + item[i].PhotoPath + '"/></div>';
+            }
+            return Str1;
+        };
+        function renderPhoto(item) {
+            var Str1 = '<div class="gl-thumb-item gl-thumb-Active"><img src="' + serverUrl + item[0].PhotoPath + '" /></div>';
+            for (var i = 1; i < item.length; i++) {
+
+                Str1 = Str1 + '<div class="gl-thumb-item"><img src="' + serverUrl + item[i].PhotoPath + '" /></div>';
+            }
+            return Str1;
+        };
+        function renderData(item) {
+            if (item != null) {
+                $('#result').html(renderBase(item));
+                $('#gl-main-img').attr('src', serverUrl + item[0].PhotoPath);
+                $('#gl-group').html(renderPhoto(item));
+            }
+        }
+        function GetPhotos() {
+            $.getJSON(url).done(function (data) {
+                renderData(data);
+                SetActiveSlider();
+            }).fail(function (jgXHR, textstatus, err) {
+                alert('Error : ' + err);
+            });
+        };
+        $(document).ready(function () {
+            GetPhotos();
+        });
+    </script>
+}
